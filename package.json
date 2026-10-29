@@ -1,0 +1,29 @@
+{
+  "name": "com.bertadev.discord-rich-presence",
+  "version": "1.0.0",
+  "displayName": "Discord Rich Presence",
+  "description": "Zero-dependency Discord Rich Presence for Unity. Pure C# IPC (no native DLLs), works in the Editor and in Windows, macOS and Linux builds (Mono and IL2CPP). One line to set up, automatic reconnect, rate limiting and a drag-and-drop component.",
+  "unity": "2021.3",
+  "documentationUrl": "https://github.com/BerTaDev/unity-discord-rich-presence#readme",
+  "changelogUrl": "https://github.com/BerTaDev/unity-discord-rich-presence/blob/main/CHANGELOG.md",
+  "licensesUrl": "https://github.com/BerTaDev/unity-discord-rich-presence/blob/main/LICENSE.md",
+  "license": "MIT",
+  "keywords": [
+    "discord",
+    "rich presence",
+    "discord rpc",
+    "rpc",
+    "presence"
+  ],
+  "author": {
+    "name": "BerTaDev",
+    "url": "https://github.com/BerTaDev"
+  },
+  "samples": [
+    {
+      "displayName": "Basic Usage",
+      "description": "Sets a presence from code and updates it at runtime with on-screen buttons.",
+      "path": "Samples~/BasicUsage"
+    }
+  ]
+}

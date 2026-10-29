@@ -1,0 +1,18 @@
+{
+    "name": "BerTaDev.DiscordRichPresence.Editor",
+    "rootNamespace": "BerTaDev.DiscordRichPresence.Editor",
+    "references": [
+        "BerTaDev.DiscordRichPresence"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

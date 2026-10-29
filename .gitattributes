@@ -1,0 +1,6 @@
+* text=auto
+*.cs text diff=csharp
+*.asmdef text
+*.meta text
+*.json text
+*.md text

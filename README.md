@@ -1,17 +1,29 @@
+<p align="center">
+  <img src="Documentation~/images/banner.svg" alt="Discord Rich Presence for Unity: an example Discord activity card and the line of code that updates it" width="100%">
+</p>
+
+<p align="center">
+  <a href="https://unity.com"><img alt="Unity 2021.3+" src="https://img.shields.io/badge/Unity-2021.3%2B-000000?logo=unity&logoColor=white"></a>
+  <img alt="Windows, macOS, Linux" src="https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-5865F2">
+  <img alt="Zero dependencies" src="https://img.shields.io/badge/dependencies-none-57F287">
+  <a href="LICENSE.md"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-FF8A3D"></a>
+  <a href="https://github.com/BerTaDev/unity-discord-rich-presence/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/BerTaDev/unity-discord-rich-presence?color=A78BFA"></a>
+</p>
+
+<p align="center"><b>English</b> · <a href="README.tr.md">Türkçe</a></p>
+
 # Discord Rich Presence for Unity
 
-[![Unity 2021.3+](https://img.shields.io/badge/Unity-2021.3%2B-black?logo=unity)](https://unity.com)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.md)
-![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-5865F2?logo=discord&logoColor=white)
-
 Show what players are doing in your game on their Discord profile. Zero dependencies, no native DLLs, set up in under a minute.
-
-**[Türkçe README](README.tr.md)**
 
 ```csharp
 DiscordPresence.Initialize("YOUR_APPLICATION_ID");
 DiscordPresence.Set(new RichPresence().WithDetails("Exploring the dungeon").WithState("Floor 3").WithElapsedTime());
 ```
+
+<p align="center">
+  <img src="Documentation~/images/anatomy.svg" alt="A Discord profile card with eight numbered parts, each mapped to the RichPresence method that sets it" width="100%">
+</p>
 
 ## Features
 
@@ -51,6 +63,10 @@ Or add it to `Packages/manifest.json`:
 1. **GameObject → Discord → Discord Presence Manager**, paste your Application ID.
 2. Fill in the default presence (details, state, image keys…) and press **Play**.
 3. Want different text per scene? Add **GameObject → Discord → Discord Scene Presence** to that scene.
+
+<p align="center">
+  <img src="Documentation~/images/inspector.svg" alt="The Discord Presence Manager in the Inspector, and three scenes whose Discord Scene Presence components each show different text on Discord" width="100%">
+</p>
 
 The manager keeps the connection alive across scene loads, and its Inspector shows the connection status while playing.
 
@@ -128,7 +144,17 @@ DiscordPresence.Error += error => Debug.LogWarning(error.Message);
 
 ## How it works
 
+<p align="center">
+  <img src="Documentation~/images/how-it-works.svg" alt="Calls on the main thread are serialized and handed to a worker thread, which keeps the newest one, rate limits and writes it to the Discord IPC pipe; events come back on the main thread" width="100%">
+</p>
+
 `Initialize` starts one background thread that looks for the Discord IPC endpoint (`\\.\pipe\discord-ipc-0..9` on Windows, `discord-ipc-0..9` in the temp/runtime directory on macOS and Linux), performs the handshake and then waits. When you call `Set` or `Update`, the presence is serialized on the main thread and handed over; the worker sends only the newest one, skips it if nothing changed and respects the rate limit. If Discord isn't running it retries with a backoff (1 s up to 15 s), and after a reconnect the current presence is sent again.
+
+<p align="center">
+  <img src="Documentation~/images/timeline.svg" alt="Over 20 seconds, 1,200 Update calls result in only 4 messages to Discord, one per real change" width="100%">
+</p>
+
+So you never have to track "did this change?" yourself: call `Update` whenever it's convenient, even every frame.
 
 ## Troubleshooting
 

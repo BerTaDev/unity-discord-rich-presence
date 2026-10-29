@@ -1,13 +1,29 @@
+<p align="center">
+  <img src="Documentation~/images/banner.svg" alt="Unity için Discord Rich Presence: örnek bir Discord aktivite kartı ve onu güncelleyen tek satır kod" width="100%">
+</p>
+
+<p align="center">
+  <a href="https://unity.com"><img alt="Unity 2021.3+" src="https://img.shields.io/badge/Unity-2021.3%2B-000000?logo=unity&logoColor=white"></a>
+  <img alt="Windows, macOS, Linux" src="https://img.shields.io/badge/platforms-Windows%20%7C%20macOS%20%7C%20Linux-5865F2">
+  <img alt="Bağımlılık yok" src="https://img.shields.io/badge/dependencies-none-57F287">
+  <a href="LICENSE.md"><img alt="MIT Lisansı" src="https://img.shields.io/badge/license-MIT-FF8A3D"></a>
+  <a href="https://github.com/BerTaDev/unity-discord-rich-presence/releases/latest"><img alt="Son sürüm" src="https://img.shields.io/github/v/release/BerTaDev/unity-discord-rich-presence?color=A78BFA"></a>
+</p>
+
+<p align="center"><a href="README.md">English</a> · <b>Türkçe</b></p>
+
 # Unity için Discord Rich Presence
 
 Oyuncuların oyununda ne yaptığını Discord profillerinde gösterin. Bağımlılık yok, native DLL yok, bir dakikada kurulur.
-
-**[English README](README.md)**
 
 ```csharp
 DiscordPresence.Initialize("UYGULAMA_ID");
 DiscordPresence.Set(new RichPresence().WithDetails("Zindanı keşfediyor").WithState("Kat 3").WithElapsedTime());
 ```
+
+<p align="center">
+  <img src="Documentation~/images/anatomy.svg" alt="Numaralanmış sekiz parçalı bir Discord profil kartı; her numara onu ayarlayan RichPresence metoduyla eşleşiyor" width="100%">
+</p>
 
 ## Özellikler
 
@@ -42,6 +58,12 @@ Belirli bir sürüme sabitlemek için: `https://github.com/BerTaDev/unity-discor
 2. Varsayılan presence'ı doldur (details, state, görsel key'leri…) ve **Play**'e bas.
 3. Sahneye göre farklı yazı mı istiyorsun? O sahneye **GameObject → Discord → Discord Scene Presence** ekle.
 
+<p align="center">
+  <img src="Documentation~/images/inspector.svg" alt="Inspector'da Discord Presence Manager ve Discord'da her biri farklı yazı gösteren Discord Scene Presence bileşenli üç sahne" width="100%">
+</p>
+
+Manager bağlantıyı sahne geçişlerinde açık tutar; Play Mode'da Inspector'ı bağlantı durumunu gösterir.
+
 ## 2b. Kodla
 
 ```csharp
@@ -65,6 +87,20 @@ DiscordPresence.Clear();
 ```
 
 Oyun kapanınca bağlantı otomatik kapanır ve presence temizlenir.
+
+## Nasıl çalışır
+
+<p align="center">
+  <img src="Documentation~/images/how-it-works.svg" alt="Ana thread'deki çağrılar JSON'a çevrilip arka plan thread'ine verilir; o da en yenisini tutar, hız limitine uyar ve Discord IPC pipe'ına yazar; olaylar ana thread'e geri gelir" width="100%">
+</p>
+
+`Initialize` tek bir arka plan thread'i başlatır. Bu thread Discord'un IPC ucunu bulur (Windows'ta `\\.\pipe\discord-ipc-0..9`, macOS/Linux'ta geçici dizindeki `discord-ipc-0..9`), handshake yapar ve bekler. `Set` ya da `Update` çağırdığında presence ana thread'de JSON'a çevrilip devredilir; thread yalnızca en yenisini gönderir, değişmediyse atlar ve hız limitine uyar. Discord kapalıysa 1 saniyeden 15 saniyeye kadar artan aralıklarla yeniden dener, bağlanınca mevcut presence'ı tekrar gönderir.
+
+<p align="center">
+  <img src="Documentation~/images/timeline.svg" alt="20 saniyede 1.200 Update çağrısı Discord'a yalnızca 4 mesaj olarak gider, her gerçek değişiklik için bir tane" width="100%">
+</p>
+
+Yani "bu değişti mi?" diye takip etmene gerek yok: `Update`'i ne zaman işine gelirse, istersen her frame çağır.
 
 ## Sorun giderme
 
